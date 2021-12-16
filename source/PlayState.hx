@@ -901,14 +901,13 @@ class PlayState extends MusicBeatState
 		add(iconP2);
 		reloadHealthBarColors();
         
-         
-var creditTxt:FlxText = new FlxText(4,healthBarBG.y + 20,0,("Port by Bambi "), 24);
+        var creditTxt:FlxText = new FlxText(4,healthBarBG.y + 20,0,("Port by Bambi"), 24);
         creditTxt.scrollFactor.set();
         creditTxt.setFormat("VCR OSD Mono", 24, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
         creditTxt.borderColor = FlxColor.BLACK;
         creditTxt.borderSize = 3;
         creditTxt.borderStyle = FlxTextBorderStyle.OUTLINE;
-        add(creditTxt)
+        add(creditTxt);
         
 		scoreTxt = new FlxText(0, healthBarBG.y + 36, FlxG.width, "", 20);
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 20, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -1046,12 +1045,7 @@ var creditTxt:FlxText = new FlxText(4,healthBarBG.y + 20,0,("Port by Bambi "), 2
 					if(daSong == 'roses') FlxG.sound.play(Paths.sound('ANGRY'));
 					schoolIntro(doof);
 				default:
-					if (dialogueJson == null)
-						startCountdown();
-					else
-					{
-                        startDialogue(dialogueJson);
-					}
+					startCountdown();
 			}
 			seenCutscene = true;
 		} else {
@@ -1144,7 +1138,7 @@ var creditTxt:FlxText = new FlxText(4,healthBarBG.y + 20,0,("Port by Bambi "), 2
 		{
 			if (!runCutscene)
 		    {
-	            FlxG.switchState(new VideoState2('assets/videos/' + fileName + '.webm', function()
+	            FlxG.switchState(new VideoState('assets/videos/' + fileName + '.webm', function()
 	            {
 	                FlxG.switchState(new PlayState());  
 	                runCutscene = true;                          
@@ -1178,10 +1172,7 @@ var creditTxt:FlxText = new FlxText(4,healthBarBG.y + 20,0,("Port by Bambi "), 2
 	var dialogueCount:Int = 0;
 	//You don't have to add a song, just saying. You can just do "startDialogue(dialogueJson);" and it should work
 	public function startDialogue(dialogueFile:DialogueFile, ?song:String = null):Void
-	{
-		#if mobileC
-		mcontrols.visible = false;
-		#end	
+	{	
 		// TO DO: Make this more flexible, maybe?
 		if(dialogueFile.dialogue.length > 0) {
 			inCutscene = true;
@@ -1303,9 +1294,6 @@ var creditTxt:FlxText = new FlxText(4,healthBarBG.y + 20,0,("Port by Bambi "), 2
 
 	public function startCountdown():Void
 	{
-		#if mobileC
-		mcontrols.visible = true;
-		#end
 		if(startedCountdown) {
 			callOnLuas('onStartCountdown', []);
 			return;
@@ -1314,6 +1302,9 @@ var creditTxt:FlxText = new FlxText(4,healthBarBG.y + 20,0,("Port by Bambi "), 2
 		inCutscene = false;
 		var ret:Dynamic = callOnLuas('onStartCountdown', []);
 		if(ret != FunkinLua.Function_Stop) {
+                        #if mobileC
+		        mcontrols.visible = true;
+		        #end
 			generateStaticArrows(0);
 			generateStaticArrows(1);
 			for (i in 0...playerStrums.length) {
